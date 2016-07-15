@@ -151,6 +151,18 @@ class NewRelic::ElasticsearchOperationResolver
     scope.join("_")
   end
 
+  def index
+    scope[0]
+  end
+
+  def type
+    scope[1]
+  end
+
+  def id
+    scope[2]
+  end
+
   def op_index
     @op_index ||= path_components.index { |c| c.start_with?('_') }
   end

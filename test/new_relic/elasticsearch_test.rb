@@ -22,7 +22,7 @@ class NewRelic::ElasticsearchTest < Minitest::Unit::TestCase
   def test_instruments_update_with_scope
     @client.update({index: 'test', type: 'test', id: 1, retry_on_conflict: 5, body: { doc: {meat_popicle: true, meat: 'beef'}, doc_as_upsert: true } })
     assert_metrics_recorded('Datastore/operation/Elasticsearch/Update')
-    assert_metrics_recorded('Datastore/statement/Elasticsearch/test_test_1/Update')
+    assert_metrics_recorded('Datastore/statement/Elasticsearch/test/Update')
   end
 end
 
@@ -56,6 +56,11 @@ class NewRelic::ElasticsearchOperationResolverTest < Minitest::Unit::TestCase
   def test_scope
     resolver = NewRelic::ElasticsearchOperationResolver.new('GET', '/test/things/1')
     assert_equal(['test', 'things', '1'], resolver.scope)
+  end
+
+  def test_index
+    resolver = NewRelic::ElasticsearchOperationResolver.new('GET', '/test/things/1')
+    assert_equal('test', resolver.index)
   end
 
   def test_scope_path

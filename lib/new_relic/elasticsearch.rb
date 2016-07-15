@@ -30,10 +30,10 @@ DependencyDetection.defer do
           end
           statement[:additional_parameters] = resolver.operands
 
-          NewRelic::Agent::Datastores.notice_statement(statement.to_json.to_s, elapsed) if statement
+          NewRelic::Agent::Datastores.notice_statement(statement.inspect, elapsed) if statement
         end
 
-        NewRelic::Agent::Datastores.wrap('Elasticsearch', resolver.operation_name, resolver.scope_path, callback) do
+        NewRelic::Agent::Datastores.wrap('Elasticsearch', resolver.operation_name, resolver.index, callback) do
           perform_request_without_new_relic(method, path, params, body)
         end
       end
