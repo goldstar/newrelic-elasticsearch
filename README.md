@@ -26,5 +26,5 @@ Add it to your Gemfile, take it away.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/newrelic-elasticsearch.
+Bug reports and pull requests are welcome on GitHub at https://github.com/goldstar/newrelic-elasticsearch.
 
