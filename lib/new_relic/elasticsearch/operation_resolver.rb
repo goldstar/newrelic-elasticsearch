@@ -148,7 +148,7 @@ class NewRelic::ElasticsearchOperationResolver
   end
 
   def scope_path
-    scope.join("/")
+    scope.join("_")
   end
 
   def op_index
