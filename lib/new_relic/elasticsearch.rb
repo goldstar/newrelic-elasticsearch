@@ -28,6 +28,7 @@ DependencyDetection.defer do
           else
             statement = body || params
           end
+          statement[:scope] = resolver.scope
           statement[:additional_parameters] = resolver.operands
 
           NewRelic::Agent::Datastores.notice_statement(statement.inspect, elapsed) if statement
