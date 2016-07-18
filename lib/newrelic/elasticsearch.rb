@@ -23,12 +23,7 @@ DependencyDetection.defer do
         resolver = NewRelic::ElasticsearchOperationResolver.new(method, path)
 
         callback = proc do |result, metric, elapsed|
-          # conditionally require body with notice_statement
-          if body && params
-            statement = body.merge(params)
-          else
-            statement = body || params
-          end
+          statement = { body: body, params: params }
           statement[:scope] = resolver.scope
           statement[:additional_parameters] = resolver.operands
 
