@@ -15,6 +15,7 @@ DependencyDetection.defer do
   end
 
   executes do
+    require 'new_relic/agent/datastores'
     NewRelic::Agent::MethodTracer.extend(NewRelic::Agent::MethodTracer)
 
     ::Elasticsearch::Transport::Client.class_eval do
