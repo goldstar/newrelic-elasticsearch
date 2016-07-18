@@ -1,4 +1,4 @@
-require 'new_relic/elasticsearch/version'
+require 'newrelic/elasticsearch/version'
 require 'new_relic/agent/method_tracer'
 require 'elasticsearch'
 
@@ -11,7 +11,7 @@ DependencyDetection.defer do
 
   executes do
     ::NewRelic::Agent.logger.info 'Installing Elasticsearch instrumentation'
-    require 'new_relic/elasticsearch/operation_resolver'
+    require 'newrelic/elasticsearch/operation_resolver'
   end
 
   executes do

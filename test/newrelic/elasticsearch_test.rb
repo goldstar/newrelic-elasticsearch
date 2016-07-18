@@ -1,6 +1,6 @@
 require_relative "../test_helper"
-require 'new_relic/elasticsearch'
-require 'new_relic/elasticsearch/operation_resolver'
+require 'newrelic/elasticsearch'
+require 'newrelic/elasticsearch/operation_resolver'
 require 'webmock/minitest'
 
 NewRelic::Agent.require_test_helper
