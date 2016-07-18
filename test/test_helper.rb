@@ -1,4 +1,3 @@
-require 'new_relic/elasticsearch'
+require 'newrelic/elasticsearch'
 require 'minitest/unit'
 require 'minitest/autorun'
-require 'minitest/pride'
