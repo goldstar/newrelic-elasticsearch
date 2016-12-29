@@ -9,7 +9,7 @@ to Elasticsearch queries.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'new_relic-elasticsearch'
+gem 'newrelic-elasticsearch'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install new_relic-elasticsearch
+    $ gem install newrelic-elasticsearch
 
 ## Usage
 
