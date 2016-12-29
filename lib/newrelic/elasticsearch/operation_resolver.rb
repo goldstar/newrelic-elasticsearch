@@ -21,7 +21,7 @@ class NewRelic::ElasticsearchOperationResolver
       [ "GET", "_cat" ] => :ambiguous_cat_resolver,
       [ "POST", "_close" ] => "CloseIndex",
       [ "POST", "_cluster" ] => "ClusterReroute",
-      [ "GET", "_cluster" ] => :ambigous_cluster_resolver,
+      [ "GET", "_cluster" ] => :ambiguous_cluster_resolver,
       [ "PUT", "_cluster" ] => "ClusterUpdateSettings",
       [ "GET", "_count" ] => "Count",
       [ "POST", "_count" ] => "Count",
