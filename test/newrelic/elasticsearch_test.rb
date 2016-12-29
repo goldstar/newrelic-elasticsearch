@@ -96,4 +96,9 @@ class NewRelic::ElasticsearchOperationResolverTest < Minitest::Unit::TestCase
     resolver = NewRelic::ElasticsearchOperationResolver.new('POST', 'test/_search')
     assert_equal('Search', resolver.operation_name)
   end
+
+  def test_ambiguous_cluster_resolver
+    resolver = NewRelic::ElasticsearchOperationResolver.new('GET', '/_cluster/pending_tasks')
+    assert_equal('ClusterPendingTasks', resolver.operation_name)
+  end
 end
