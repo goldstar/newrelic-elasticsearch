@@ -1,4 +1,15 @@
 class NewRelic::ElasticsearchOperationResolver
+  module Inflector
+    refine String do
+      def legalize
+        # elasticsearch indexes cannot have underscores in the name
+        # and datastore metrics cannot have dashes
+
+        self.split('-').map { |w| w[0].upcase + w[1..-1] }.join.gsub(/(Production)|(Staging)/,'')
+      end
+    end
+  end
+
   ELASTICSEARCH_OPERATION_NAMES =
     {
       [ "PUT", nil ] => :ambiguous_put_resolver,
@@ -107,6 +118,8 @@ class NewRelic::ElasticsearchOperationResolver
 
   attr_accessor :http_method, :path
 
+  using Inflector
+
   def initialize(http_method, path)
     @http_method = http_method
     @path = path
@@ -152,11 +165,12 @@ class NewRelic::ElasticsearchOperationResolver
   end
 
   def index
-    scope[0]
+    index = scope[0]
+    index.legalize unless index.start_with?('_')
   end
 
   def type
-    scope[1]
+    scope[1].legalize
   end
 
   def id
@@ -190,7 +204,7 @@ class NewRelic::ElasticsearchOperationResolver
   end
 
   def ambiguous_nodes_resolver
-    "Node" + operands[1..-1].map(&:capitalize).join
+    "Node" + operands[1..-1].map{ |s| s.legalize }.join
   end
 
   def ambiguous_percolate_resolver
@@ -202,7 +216,7 @@ class NewRelic::ElasticsearchOperationResolver
   end
 
   def ambiguous_stats_resolver
-    "Indicies" + operands.map(&:capitalize).join
+    "Indicies" + operands.map { |s| s.legalize }.join
   end
 
   def ambiguous_cluster_resolver
