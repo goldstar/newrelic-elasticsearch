@@ -10,6 +10,7 @@ task :test do
   end
 end
 
+desc "Generate a new resolver class from the endpoint_list"
 task :generate_resolver do
   list = File.read(File.expand_path('test/endpoint_list.txt', __dir__))
 
