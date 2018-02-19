@@ -166,6 +166,7 @@ class NewRelic::ElasticsearchOperationResolver
 
   def index
     index = scope[0]
+    return nil unless index
     index.legalize unless index.start_with?('_')
   end
 

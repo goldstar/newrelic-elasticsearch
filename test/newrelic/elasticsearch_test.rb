@@ -4,25 +4,48 @@ require 'newrelic/elasticsearch/operation_resolver'
 require 'webmock/minitest'
 
 NewRelic::Agent.require_test_helper
-NewRelic::Agent.manual_start
 DependencyDetection.detect!
 
 class NewRelic::ElasticsearchTest < Minitest::Unit::TestCase
   def setup
     stub_request(:any, /.*?localhost:9200.*/)
+    stub_request(:any, /.*?169.254.169.254.*/) # this is the AWS instance identity check - we don't care about this in test
+    stub_request(:any, /.*?metadata.google.internal.*/) # google cloud instance identity check
+    stub_request(:any, /.*?collector.newrelic.com.*/) # check in with new relic
+    NewRelic::Agent.manual_start
     @client = Elasticsearch::Client.new(url: 'http://localhost:9200')
   end
 
   def test_instruments_search
-    @client.search(index: 'test', body: { query: { match_all: {}} })
+    with_config(notice_nosql_statement: true) do
+      in_transaction do
+        @client.search(index: 'test', body: { query: { match_all: {}} })
+      end
+    end
+
     assert_metrics_recorded('Datastore/operation/Elasticsearch/Search')
     assert_metrics_recorded('Datastore/statement/Elasticsearch/Test/Search')
   end
 
   def test_instruments_update_with_scope
-    @client.update({index: 'searchable-listings-production', type: 'test', id: 1, retry_on_conflict: 5, body: { doc: {meat_popicle: true, meat: 'beef'}, doc_as_upsert: true } })
+    with_config(notice_nosql_statement: true) do
+      in_transaction do
+        @client.update({index: 'searchable-listings-production', type: 'test', id: 1, retry_on_conflict: 5, body: { doc: {meat_popicle: true, meat: 'beef'}, doc_as_upsert: true } })
+      end
+    end
+
     assert_metrics_recorded('Datastore/operation/Elasticsearch/Update')
     assert_metrics_recorded('Datastore/statement/Elasticsearch/SearchableListings/Update')
+  end
+
+  def test_client_info
+    with_config(notice_nosql_statement: true) do
+      in_transaction do
+        @client.info
+      end
+    end
+
+    assert_metrics_recorded('Datastore/operation/Elasticsearch/ServerGet')
   end
 end
 
