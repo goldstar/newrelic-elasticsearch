@@ -66,6 +66,11 @@ class NewRelic::ElasticsearchOperationResolverTest < Minitest::Unit::TestCase
     assert_equal(['test','test','_warmer','warm'], resolver.path_components)
   end
 
+  def test_path_components_with_special_characters
+    resolver = NewRelic::ElasticsearchOperationResolver.new('POST', '/test%2A/test/_warmer/warm')
+    assert_equal(['test*','test','_warmer','warm'], resolver.path_components)
+  end
+
   def test_operands
     resolver = NewRelic::ElasticsearchOperationResolver.new('GET', '/test/_alias/test-alias')
     assert_equal(['test-alias'], resolver.operands)
