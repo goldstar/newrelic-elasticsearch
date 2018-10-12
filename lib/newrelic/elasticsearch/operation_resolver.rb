@@ -1,3 +1,5 @@
+require "cgi"
+
 class NewRelic::ElasticsearchOperationResolver
   module Inflector
     refine String do
@@ -136,7 +138,7 @@ class NewRelic::ElasticsearchOperationResolver
   end
 
   def path_components
-    @path_components ||= path.split('/').reject { |s| s.empty? }
+    @path_components ||= CGI::unescape(path).split('/').reject { |s| s.empty? }
   end
 
   def operands
