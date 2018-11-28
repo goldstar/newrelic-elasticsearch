@@ -19,7 +19,7 @@ DependencyDetection.defer do
     NewRelic::Agent::MethodTracer.extend(NewRelic::Agent::MethodTracer)
 
     ::Elasticsearch::Transport::Client.class_eval do
-      @@old_version = false
+      @@old_version = method(:perform_request).parameters.length == 4
       def perform_request_with_new_relic(method, path, params={}, body=nil, headers=nil)
         resolver = NewRelic::ElasticsearchOperationResolver.new(method, path)
 
@@ -40,9 +40,6 @@ DependencyDetection.defer do
         end
       end
 
-      if method(:perform_request).parameters.length == 4
-        @@old_version = true
-      end
 
       alias_method :perform_request_without_new_relic, :perform_request
       alias_method :perform_request, :perform_request_with_new_relic
