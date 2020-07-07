@@ -19,7 +19,7 @@ DependencyDetection.defer do
     NewRelic::Agent::MethodTracer.extend(NewRelic::Agent::MethodTracer)
 
     ::Elasticsearch::Transport::Client.class_eval do
-      def perform_request_with_new_relic(method, path, params={}, body=nil)
+      def perform_request_with_new_relic(method, path, params={}, body=nil, *_args)
         resolver = NewRelic::ElasticsearchOperationResolver.new(method, path)
 
         callback = proc do |result, metric, elapsed|
@@ -31,7 +31,7 @@ DependencyDetection.defer do
         end
 
         NewRelic::Agent::Datastores.wrap('Elasticsearch', resolver.operation_name, resolver.index, callback) do
-          perform_request_without_new_relic(method, path, params, body)
+          perform_request_without_new_relic(method, path, params, body, *_args)
         end
       end
 
